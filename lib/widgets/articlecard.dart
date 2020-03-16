@@ -8,11 +8,13 @@ import 'nopagetransition.dart';
 
 class ArticleCard extends StatelessWidget {
   final List<Category> categories;
-  final Article article;
-  ArticleCard(this.categories, this.article);
+  final List<Article> articles;
+  final int index;
+  ArticleCard(this.categories, this.articles, this.index);
 
-  @override
   Widget build(BuildContext context) {
+    Article article = articles[index];
+
     return Card(
         shape: RoundedRectangleBorder(
             //borderRadius: BorderRadius.circular(8.0),
@@ -20,7 +22,7 @@ class ArticleCard extends StatelessWidget {
         elevation: 4.0,
         margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0),
         child: InkWell(onTap: () { Navigator.of(context).push(NoPageTransition(
-                  page: ArticleView(article: article))); }, child: getCardView(context)));
+                  page: ArticleView(articles: articles, index: index))); }, child: getCardView(article, context)));
         /*child: InkWell(
             radius: 5.0,
             onTap: () {
@@ -53,7 +55,7 @@ class ArticleCard extends StatelessWidget {
             },*/
   }
 
-  getCardView(BuildContext context) {    
+  getCardView(Article article, BuildContext context) {    
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -94,14 +96,14 @@ class ArticleCard extends StatelessWidget {
                           1.0
                         ])),
               ),
-          showCategory(context)
+          showCategory(article, context)
         ]),
-        showTitle(context)
+        showTitle(article, context)
       ],
     );
   }
   
-  Widget showTitle(BuildContext context) {
+  Widget showTitle(Article article, BuildContext context) {
     if(categories != null) {
       return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -156,7 +158,7 @@ class ArticleCard extends StatelessWidget {
         );
     }
   }
-  Widget showCategory(BuildContext context) {
+  Widget showCategory(Article article, BuildContext context) {
     if(categories != null) {
         return Align(
               alignment: Alignment.bottomLeft,

@@ -6,7 +6,6 @@ import 'package:wp_flutter_app/models/category.dart';
 import 'variables/constants.dart' as con;
 import 'package:http/http.dart' as http;
 import 'widgets/customscaffold.dart';
-import 'widgets/filestorage.dart';
 
 main() {
   runApp(MyApp());
@@ -149,14 +148,13 @@ class MyApp extends StatelessWidget {
                       blurRadius: 1.6),
                 ]),
           )),
-      home: MyHomePage(title: 'Flutter Demo Home Page', storage: FileStorage()),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final FileStorage storage;
-  MyHomePage({Key key, this.title, this.storage}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 

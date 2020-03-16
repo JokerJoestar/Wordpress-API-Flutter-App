@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wp_flutter_app/models/pageroute.dart' as pageRoute;
+import 'package:wp_flutter_app/pages/search.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/pages/categories.dart';
 import 'package:wp_flutter_app/pages/home.dart';
@@ -32,7 +33,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
     pageRoute.PageRoute(
         iconData: Icons.search,
         page: Center(
-          child: Text('Search something'),
+          child: Search(),
         ))
   ];
 

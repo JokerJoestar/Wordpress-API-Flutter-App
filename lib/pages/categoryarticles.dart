@@ -69,16 +69,6 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                               return new StaggeredTile.fit(2);
                             else
                               return new StaggeredTile.fit(1);
-                            /*if(MediaQuery.of(context).orientation == Orientation.portrait)
-                                return new StaggeredTile.fit(1);
-                              else 
-                                return new StaggeredTile.count(1, 0.814025);*/
-                            /*return new StaggeredTile.count(
-                                  1,
-                                  MediaQuery.of(context).orientation ==
-                                          Orientation.portrait
-                                      ? 0.777
-                                      : 0.814025);*/
                           },
                           padding: const EdgeInsets.only(top: 16.0),
                           controller: _scrollController,
@@ -86,7 +76,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                           itemBuilder: (context, index) {
                             if (index < _snapshot.data.length) {
                               return ArticleCard(
-                                  null, _snapshot.data[index]);
+                                  null, _snapshot.data, index);
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),
