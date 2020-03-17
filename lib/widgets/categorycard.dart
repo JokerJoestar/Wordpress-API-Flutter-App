@@ -22,7 +22,6 @@ class CategoryCard extends StatelessWidget {
         child: InkWell(
           radius: 5.0,
           onTap: () {
-            print(category.id);
              Navigator.of(context).push(NoPageTransition(
                   page: CustomScaffold(pageIndex: 1, bodyWidget: Categories(category: category,))));
           },

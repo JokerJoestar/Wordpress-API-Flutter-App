@@ -33,6 +33,7 @@ dependencies:
   http:
   shared_preferences: ^0.5.6+3
   path_provider:
+  share:
 
 dev_dependencies:
   flutter_test:

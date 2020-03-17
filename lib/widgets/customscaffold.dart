@@ -8,10 +8,11 @@ import 'package:wp_flutter_app/pages/home.dart';
 class CustomScaffold extends StatefulWidget {
   final Widget bodyWidget;
   final int pageIndex;
+  final Widget appBar;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   const CustomScaffold(
-      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex})
+      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex, this.appBar})
       : super(key: key);
 
   @override
@@ -39,6 +40,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
 
   int _pageIndex = 0;
   Widget _bodyWidget;
+  Widget _appBar;
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
       setState(() {
         _pageIndex = widget.pageIndex;
         _bodyWidget = widget.bodyWidget;
+        _appBar = widget.appBar;
       });
     }
   }
@@ -56,7 +59,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: con.PageBackgroundColor,
-        appBar: AppBar(
+        appBar: _appBar == null ? AppBar(
             brightness: Brightness.dark,
             backgroundColor: con.AppBarBackgroundColor,
             leading: new Container(width: 0, height: 0),
@@ -67,7 +70,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                     padding: EdgeInsets.all(30),
                     child: Image.asset('assets/images/logo.png',
                         fit: BoxFit.fitHeight,
-                        alignment: Alignment.centerLeft)))),
+                        alignment: Alignment.centerLeft)))) : _appBar,
         body: getWidget(),
         bottomNavigationBar: BottomNavigationBar(
           key: _bottomNavigationKey,
@@ -87,14 +90,14 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                   )))
               .toList(),
           onTap: (index) {
-            setState(() { _pageIndex = index; _bodyWidget = null; } );
+            setState(() { _pageIndex = index; _appBar = null; _bodyWidget = null; } );
           },
         ),
     );
   }
 
   getWidget() {
-    if(_bodyWidget != null && _pageIndex == 1)
+    if(_bodyWidget != null)
       return SafeArea(child: _bodyWidget);
     else
       return SafeArea(child: pages[_pageIndex].page);

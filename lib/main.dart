@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             overline: TextStyle(
                 fontFamily: 'PFDInSerif-Bold',
                 fontSize: 28,
-                color: Color(0xFF0e4d92),
+                color: con.AppBarBackgroundColor,
                 letterSpacing: 0.15,
                 shadows: [
                   Shadow(
