@@ -165,6 +165,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences sharedPreferences;
   bool _loaded = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<void> loadCategories() async {
     await SharedPreferences.getInstance().then((SharedPreferences prefs) async {
@@ -212,6 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
     if(!_loaded)
       return Container();
 
-    return CustomScaffold();
+    return CustomScaffold(scaffoldKey: _scaffoldKey);
   }
 }

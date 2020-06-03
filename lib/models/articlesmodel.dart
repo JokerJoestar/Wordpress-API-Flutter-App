@@ -10,18 +10,21 @@ class ArticlesModel {
   Stream<List<Article>> stream;
   bool hasMore;
   int page;
+  String searchText;
   bool _isLoading;
   List<Article> _data;
   StreamController<List<Article>> _controller;
   String endpointUrl;
   int categoryId;
 
-  ArticlesModel(String endpointUrl, int categoryId) {
+  ArticlesModel(String endpointUrl, int categoryId, String searchText) {
     this.endpointUrl = endpointUrl;
+    this.searchText = searchText;
+    this.categoryId = categoryId;
+
     _data = List<Article>();
     _controller = StreamController<List<Article>>.broadcast();
     _isLoading = false;
-    this.categoryId = categoryId;
 
     stream = _controller.stream.map((List<Article> articlesData) {
       return articlesData;
@@ -51,14 +54,14 @@ class ArticlesModel {
     page++;
     _isLoading = true;
 
-    return loadArticles(endpointUrl, page, categoryId).then((articlesData) {
+    return loadArticles(endpointUrl, page, categoryId, searchText).then((articlesData) {
       _isLoading = false;
       _data.addAll(articlesData);
       _controller.add(_data);
     });
   }
 
-  Future<List<Article>> loadArticles(String endpointUrl, int page, int categoryId) async {
+  Future<List<Article>> loadArticles(String endpointUrl, int page, int categoryId, String searchText) async {
     var tempArticles = new List<Article>();
     var url = endpointUrl + "?page=$page&per_page=${con.PostsPerPage}&_embed";
   
@@ -66,6 +69,12 @@ class ArticlesModel {
       this.categoryId = categoryId;
 
       url += "&categories[]=$categoryId";
+    }
+
+    if(searchText != null) {
+      this.searchText = searchText;
+
+      url += "&search=$searchText";
     }
 
     var response = await http.get(url);

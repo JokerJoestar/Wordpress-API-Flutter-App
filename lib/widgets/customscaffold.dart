@@ -33,9 +33,8 @@ class _CustomScaffoldState extends State<CustomScaffold> {
       ),
     pageRoute.PageRoute(
         iconData: Icons.search,
-        page: Center(
-          child: Search(),
-        ))
+        page: Search()
+      )
   ];
 
   int _pageIndex = 0;
@@ -58,6 +57,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: widget.scaffoldKey,
       backgroundColor: con.PageBackgroundColor,
         appBar: _appBar == null ? AppBar(
             brightness: Brightness.dark,
@@ -90,7 +90,11 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                   )))
               .toList(),
           onTap: (index) {
-            setState(() { _pageIndex = index; _appBar = null; _bodyWidget = null; } );
+            setState(() { 
+              _pageIndex = index; 
+              _appBar = null; 
+              _bodyWidget = null; 
+            } );
           },
         ),
     );

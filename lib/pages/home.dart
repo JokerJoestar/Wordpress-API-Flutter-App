@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    articles = ArticlesModel("${con.WordpressUrl}/wp-json/wp/v2/posts", null);
+    articles = ArticlesModel("${con.WordpressUrl}/wp-json/wp/v2/posts", null, null);
 
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
