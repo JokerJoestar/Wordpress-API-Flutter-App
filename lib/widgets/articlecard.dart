@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/category.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/pages/articleview.dart';
 import 'nopagetransition.dart';
+import 'dart:convert';
 
 class ArticleCard extends StatelessWidget {
   final List<Category> categories;
@@ -120,13 +123,17 @@ class ArticleCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.title,
               ),
               Padding(padding: const EdgeInsets.all(1)),
-              Text(
-                article.publishedDate,
-                softWrap: true,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.body2,
-              ),
+              Row(children: [
+                Text(
+                  article.publishedDate,
+                  softWrap: true,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.body2,
+                ),
+                Expanded(child: Align(alignment: Alignment.centerRight, child: GestureDetector( onTap: () { setArticleOnFavorites(article); }, child: Padding(padding: EdgeInsets.only(left: 5), child: Icon(Icons.favorite, color: Theme.of(context).textTheme.body2.color.withAlpha(150), size: 26) )))),
+                Align(alignment: Alignment.centerRight, child: GestureDetector( onTap: () { Share.share(article.link); }, child: Padding(padding: EdgeInsets.only(left: 5), child: Icon(Icons.share, color: Theme.of(context).textTheme.body2.color.withAlpha(150), size: 26) )))
+              ])
             ],
           ),
         );
@@ -146,18 +153,23 @@ class ArticleCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.body1,
               ) : Container(),
               Padding(padding: const EdgeInsets.all(1)),
-              Align(alignment: Alignment.bottomRight, child: Text(
-                article.publishedDate,
-                softWrap: true,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.body2,
-              )),
+              Row(children: [
+                Text(
+                  article.publishedDate,
+                  softWrap: true,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.body2,
+                ),
+                Expanded(child: Align(alignment: Alignment.centerRight, child: GestureDetector( onTap: () { setArticleOnFavorites(article); }, child: Padding(padding: EdgeInsets.only(left: 5), child: Icon(Icons.favorite, color: Theme.of(context).textTheme.body2.color.withAlpha(150), size: 26) )))),
+                Align(alignment: Alignment.centerRight, child: GestureDetector( onTap: () { Share.share(article.link); }, child: Padding(padding: EdgeInsets.only(left: 5), child: Icon(Icons.share, color: Theme.of(context).textTheme.body2.color.withAlpha(150), size: 26) )))
+              ])
             ],
           ),
         );
     }
   }
+
   Widget showCategory(Article article, BuildContext context) {
     if(categories != null) {
         return Align(
@@ -199,5 +211,34 @@ class ArticleCard extends StatelessWidget {
     }
 
     return category;
+  }
+
+  setArticleOnFavorites(Article article) async {
+    List<Article> favorites = new List<Article>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    if(prefs.getString('favorites') != null)
+      favorites.addAll(json.decode(prefs.getString('favorites')).map<Article>((m) => Article.simpleFromJson(m)).toList());
+
+    if(checkIfArticleIsOnFavorites(article, favorites) == false) {
+      favorites.add(article);
+      await prefs.setString('favorites', jsonEncode(favorites));
+    } else print("Already in");
+  }
+
+// I need to change color of favorite icon based on this value
+  checkIfArticleIsOnFavorites(Article article, List<Article> articles) {
+    bool alreadyIn = false;
+
+    if(articles.length > 0) {
+      for(int i=0; i < articles.length; i++) {
+        if(articles[i].id == article.id) {
+          alreadyIn = true;
+          break;
+        }
+      }
+    }
+
+    return alreadyIn;
   }
 }

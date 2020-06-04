@@ -7,8 +7,6 @@ import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/widgets/articlecard.dart';
-import 'package:wp_flutter_app/widgets/customscaffold.dart';
-import 'package:wp_flutter_app/widgets/nopagetransition.dart';
 
 class Search extends StatefulWidget {
   @override

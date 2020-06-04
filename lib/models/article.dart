@@ -26,6 +26,17 @@ class Article {
   final List<int> categories;
   final String title;
 
+  factory Article.simpleFromJson(Map<String, dynamic> json) {
+    return Article(id: json['id'],
+        publishedDate: json['publishedDate'],
+        link: json['link'],
+        content: json['content'],
+        title: json['title'],
+        description: json['description'],
+        postImage: json['postImage'],
+        categories: json['categories'].cast<int>());
+  }
+
   factory Article.fromJson(Map<String, dynamic> json) {
     initializeTimeZones();
     initializeDateFormatting('el_GR');
@@ -57,4 +68,15 @@ class Article {
         postImage: postImage,
         categories: json['categories'].cast<int>());
   }
+
+  Map toJson() => {
+    'id': id,
+    'title': title,
+    'postImage': postImage,
+    'description': description,
+    'link': link,
+    'publishedDate': publishedDate,
+    'content': content,
+    'categories': categories
+  };
 }
