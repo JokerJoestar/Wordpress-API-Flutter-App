@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wp_flutter_app/models/pageroute.dart' as pageRoute;
+import 'package:wp_flutter_app/pages/favorites.dart';
 import 'package:wp_flutter_app/pages/search.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/pages/categories.dart';
@@ -26,6 +27,10 @@ class _CustomScaffoldState extends State<CustomScaffold> {
     pageRoute.PageRoute(
       iconData: Icons.home,
       page: Home(),
+    ),
+    pageRoute.PageRoute(
+      iconData: Icons.favorite,
+      page: Favorites(),
     ),
     pageRoute.PageRoute(
         iconData: Icons.assignment,

@@ -26,6 +26,11 @@ class Article {
   final List<int> categories;
   final String title;
 
+  @override
+  toString() {
+    return this.title;
+  }
+  
   factory Article.simpleFromJson(Map<String, dynamic> json) {
     return Article(id: json['id'],
         publishedDate: json['publishedDate'],

@@ -23,7 +23,7 @@ class CategoryCard extends StatelessWidget {
           radius: 5.0,
           onTap: () {
              Navigator.of(context).push(NoPageTransition(
-                  page: CustomScaffold(pageIndex: 1, bodyWidget: Categories(category: category,))));
+                  page: CustomScaffold(pageIndex: 2, bodyWidget: Categories(category: category,))));
           },
           child: getCardView(context)));
         /*child: InkWell(
@@ -66,7 +66,7 @@ class CategoryCard extends StatelessWidget {
           height: size,
           color: getRandomColor(),
           child: Center(
-              child: Padding(padding: EdgeInsets.all(size/12), child: Text(category.name, style: Theme.of(context).textTheme.subhead, softWrap: true, textAlign: TextAlign.center,
+              child: Padding(padding: EdgeInsets.all(size/12), child: Text(category.name, style: Theme.of(context).textTheme.subtitle1, softWrap: true, textAlign: TextAlign.center,
                   maxLines: 2, overflow: TextOverflow.ellipsis)))),
     );
   }

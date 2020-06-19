@@ -35,18 +35,7 @@ class _CategoriesState extends State<Categories> {
       else 
         return categories.where((c) => c.parent == widget.category.id).toList();
   }
-
-  /*Future<List<Category>> findCategories() async {
-    categories = new List<Category>();
-    await storage.readJsonCategories().then((c) => categories.addAll(
-        json.decode(c).map<Category>((m) => Category.fromJson(m)).toList()));
-
-    if(widget.categoryId == null)
-      return categories.where((c) => c.parent == 0).toList();
-    else 
-      return categories.where((c) => c.parent == widget.categoryId).toList();
-  }*/
-
+  
   Widget build(BuildContext context) {
     return Scaffold(body: futureWidget());
   }

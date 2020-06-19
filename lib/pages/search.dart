@@ -17,6 +17,7 @@ class _SearchState extends State<Search> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
   List<Category> categories;
+  List<Article> favorites;
   String searchText;
 
   void getCategories() async {
@@ -29,6 +30,17 @@ class _SearchState extends State<Search> {
         json.decode(categoriesString).map<Category>((m) => Category.fromJson(m)).toList());
   }
 
+  void getFavorites() async {
+    favorites = new List<Article>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var favoritesString = prefs.getString('favorites');
+
+    if(favoritesString != null) {
+      favorites.addAll(json.decode(favoritesString).map<Article>((m) => Article.simpleFromJson(m)).toList());
+    }
+  }
+
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -39,6 +51,7 @@ class _SearchState extends State<Search> {
     });
 
     getCategories();
+    getFavorites();
 
     super.initState();
   }
@@ -52,7 +65,7 @@ class _SearchState extends State<Search> {
               child: TextField(
                   enableInteractiveSelection: false,
                   keyboardType: TextInputType.text,
-                  style: Theme.of(context).textTheme.title.merge(TextStyle(color: Color.fromRGBO(58, 58, 58, 1), fontSize: 21)),
+                  style: Theme.of(context).textTheme.headline6.merge(TextStyle(color: Color.fromRGBO(58, 58, 58, 1), fontSize: 21)),
                   onSubmitted: (text) {
                     setState(() {
                       if (text != searchText && text.isNotEmpty) {
@@ -113,7 +126,7 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) {
                             if (index < _snapshot.data.length) {
                               return ArticleCard(
-                                  categories, _snapshot.data, index);
+                                  categories, favorites, _snapshot.data, index);
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),

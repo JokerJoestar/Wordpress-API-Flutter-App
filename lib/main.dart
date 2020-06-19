@@ -53,21 +53,21 @@ class MyApp extends StatelessWidget {
                       color: Colors.black.withOpacity(0.8),
                       blurRadius: 1.3),
                 ]),
-            headline: TextStyle(
+            headline5: TextStyle(
                 fontFamily: 'PFDInSerif-Bold',
                 fontSize: 24,
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
-            display3: TextStyle(
+            headline2: TextStyle(
                 fontFamily: 'Direct-Bold',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.bold),
-            body2: TextStyle(
+            bodyText1: TextStyle(
                 fontFamily: 'Direct-Regular',
                 fontSize: 14,
                 color: Color.fromRGBO(128, 128, 128, 1)),
-            subtitle: TextStyle(
+            subtitle2: TextStyle(
                 fontFamily: 'PFDInSerif-Regular',
                 fontSize: 23,
                 color: Colors.white,
@@ -94,23 +94,23 @@ class MyApp extends StatelessWidget {
                       color: Color(0xFF0e4d92).withOpacity(0.8),
                       blurRadius: 1.4),
                 ]),
-            title: TextStyle(
+            headline6: TextStyle(
                 fontFamily: 'PFDInSerif-Bold',
                 fontSize: 22,
                 color: Colors.black,
                 letterSpacing: 0.2),
-            body1: TextStyle(
+            bodyText2: TextStyle(
                 fontFamily: 'Direct-Regular',
                 fontSize: 18,
                 color: Colors.black,
                 letterSpacing: -0.4,
                 wordSpacing: -0.8),
-            display1: TextStyle(
+            headline4: TextStyle(
               fontSize: 20,
               fontFamily: 'Direct-Bold',
               color: Color.fromRGBO(8, 8, 8, 1),
             ),
-            display2: TextStyle(
+            headline3: TextStyle(
                 fontSize: 28,
                 fontFamily: 'Direct-Bold',
                 color: Colors.grey[50],
@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
                       blurRadius: 1.6,
                       offset: Offset.fromDirection(1, 2))
                 ]),
-            subhead: TextStyle(
+            subtitle1: TextStyle(
                 fontFamily: 'PFDInSerif-Bold',
                 fontSize: 21,
                 color: Colors.white,

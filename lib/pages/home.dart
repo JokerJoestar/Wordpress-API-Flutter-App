@@ -17,6 +17,7 @@ class _HomeState extends State<Home> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
   List<Category> categories;
+  List<Article> favorites;
 
   void getCategories() async {
     categories = new List<Category>();
@@ -26,6 +27,17 @@ class _HomeState extends State<Home> {
 
     categories.addAll(
         json.decode(categoriesString).map<Category>((m) => Category.fromJson(m)).toList());
+  }
+
+  void getFavorites() async {
+    favorites = new List<Article>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var favoritesString = prefs.getString('favorites');
+
+    if(favoritesString != null) {
+      favorites.addAll(json.decode(favoritesString).map<Article>((m) => Article.simpleFromJson(m)).toList());
+    }
   }
 
   @override
@@ -40,13 +52,13 @@ class _HomeState extends State<Home> {
     });
 
     getCategories();
-
+    getFavorites();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: futureWidget());
+      return Scaffold(body: futureWidget());
   }
 
   Widget futureWidget() {
@@ -87,7 +99,7 @@ class _HomeState extends State<Home> {
                           itemBuilder: (context, index) {
                             if (index < _snapshot.data.length) {
                               return ArticleCard(
-                                  categories, _snapshot.data, index);
+                                  categories, favorites, _snapshot.data, index);
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),

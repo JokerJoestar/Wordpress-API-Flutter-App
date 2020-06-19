@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -18,6 +21,18 @@ class CategoryArticles extends StatefulWidget {
 class _CategoryArticlesState extends State<CategoryArticles> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
+  List<Article> favorites;
+  
+  void getFavorites() async {
+    favorites = new List<Article>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var favoritesString = prefs.getString('favorites');
+
+    if(favoritesString != null) {
+      favorites.addAll(json.decode(favoritesString).map<Article>((m) => Article.simpleFromJson(m)).toList());
+    }
+  }
 
   @override
   void initState() {
@@ -30,6 +45,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
       }
     });
 
+    getFavorites();
     super.initState();
   }
 
@@ -76,7 +92,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                           itemBuilder: (context, index) {
                             if (index < _snapshot.data.length) {
                               return ArticleCard(
-                                  null, _snapshot.data, index);
+                                  null, favorites, _snapshot.data, index);
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),
