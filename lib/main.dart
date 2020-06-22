@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,8 +69,8 @@ class MyApp extends StatelessWidget {
                 fontSize: 14,
                 color: Color.fromRGBO(128, 128, 128, 1)),
             subtitle2: TextStyle(
-                fontFamily: 'PFDInSerif-Regular',
-                fontSize: 23,
+                fontFamily: 'PFDInSerif-Bold',
+                fontSize: 28,
                 color: Colors.white,
                 letterSpacing: 0.02,
                 shadows: [
@@ -86,12 +87,12 @@ class MyApp extends StatelessWidget {
                   Shadow(
                       // topRight
                       offset: Offset(0.8, 0.8),
-                      color: Color(0xFF0e4d92).withOpacity(0.8),
+                      color: con.AppBarBackgroundColor.withOpacity(0.8),
                       blurRadius: 1.4),
                   Shadow(
                       // topLeft
                       offset: Offset(-0.8, 0.8),
-                      color: Color(0xFF0e4d92).withOpacity(0.8),
+                      color: con.AppBarBackgroundColor.withOpacity(0.8),
                       blurRadius: 1.4),
                 ]),
             headline6: TextStyle(
@@ -205,6 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
+    FirebaseAdMob.instance.initialize(appId: "ca-app-pub-1990887568219834~5985307008");
     loadCategories().whenComplete(() => setState(() => _loaded = true));
   }
 

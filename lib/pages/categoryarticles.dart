@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wp_flutter_app/helpers/ads.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -13,7 +14,7 @@ class CategoryArticles extends StatefulWidget {
   final Category category;
 
   const CategoryArticles({Key key, this.category}) : super(key: key);
-  
+
   @override
   _CategoryArticlesState createState() => _CategoryArticlesState();
 }
@@ -22,21 +23,26 @@ class _CategoryArticlesState extends State<CategoryArticles> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
   List<Article> favorites;
-  
+
   void getFavorites() async {
     favorites = new List<Article>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var favoritesString = prefs.getString('favorites');
 
-    if(favoritesString != null) {
-      favorites.addAll(json.decode(favoritesString).map<Article>((m) => Article.simpleFromJson(m)).toList());
+    if (favoritesString != null) {
+      favorites.addAll(json
+          .decode(favoritesString)
+          .map<Article>((m) => Article.simpleFromJson(m))
+          .toList());
     }
   }
 
   @override
   void initState() {
-    articles = ArticlesModel("${con.WordpressUrl}/wp-json/wp/v2/posts", widget.category.id, null);
+    Ads.hideBannerAd();
+    articles = ArticlesModel(
+        "${con.WordpressUrl}/wp-json/wp/v2/posts", widget.category.id, null);
 
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
@@ -55,6 +61,10 @@ class _CategoryArticlesState extends State<CategoryArticles> {
   }
 
   Widget futureWidget() {
+    var categoryName = "";
+
+    if (widget.category != null) categoryName = widget.category.name;
+
     return StreamBuilder<List<Article>>(
       stream: articles.stream,
       builder: (BuildContext _context, AsyncSnapshot _snapshot) {
@@ -79,9 +89,10 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                                   Orientation.portrait
                               ? 1
                               : 2,
-                          itemCount: _snapshot.data.length + 1,
+                          itemCount: _snapshot.data.length + 2,
                           staggeredTileBuilder: (int index) {
-                            if (index == _snapshot.data.length)
+                            if (index == _snapshot.data.length + 1 ||
+                                index == 0)
                               return new StaggeredTile.fit(2);
                             else
                               return new StaggeredTile.fit(1);
@@ -90,9 +101,21 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                           controller: _scrollController,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
-                            if (index < _snapshot.data.length) {
+                            if (index == 0) {
+                              return Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text(categoryName,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle2,
+                                      textAlign: TextAlign.center));
+                            } else if (index < _snapshot.data.length + 1) {
                               return ArticleCard(
-                                  null, favorites, _snapshot.data, index);
+                                null,
+                                favorites,
+                                _snapshot.data,
+                                --index,
+                                pageIndex: 2,
+                              );
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),

@@ -62,6 +62,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      primary: true,
       key: widget.scaffoldKey,
       backgroundColor: con.PageBackgroundColor,
         appBar: _appBar == null ? AppBar(

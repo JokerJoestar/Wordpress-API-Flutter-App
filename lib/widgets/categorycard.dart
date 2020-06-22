@@ -26,36 +26,6 @@ class CategoryCard extends StatelessWidget {
                   page: CustomScaffold(pageIndex: 2, bodyWidget: Categories(category: category,))));
           },
           child: getCardView(context)));
-        /*child: InkWell(
-            radius: 5.0,
-            onTap: () {
-              Navigator.of(context).push(NoPageTransition(
-                  page: Scaffold(
-                      appBar: AppBar(
-                          actions: <Widget>[
-                            IconButton(
-                                icon: Icon(Icons.share),
-                                onPressed: () {
-                                  Share.share(article.link);
-                                }),
-                          ],
-                          brightness: Brightness.dark,
-                          backgroundColor: Color.fromRGBO(8, 8, 8, 1),
-                          centerTitle: true,
-                          title: ConstrainedBox(
-                              constraints:
-                                  BoxConstraints(maxHeight: 200, maxWidth: 200),
-                              child: Padding(
-                                  padding: EdgeInsets.all(0),
-                                  child: Image.asset('assets/images/lplogo.png',
-                                      fit: BoxFit.fitHeight,
-                                      alignment: Alignment.centerLeft)))),
-                      body: WebView(
-                        initialUrl: article.link,
-                        javascriptMode: JavascriptMode.unrestricted,
-                      ))));
-              
-            },*/
   }
 
   getCardView(BuildContext context) {
@@ -74,7 +44,7 @@ class CategoryCard extends StatelessWidget {
   getRandomColor() {
     var p = HSLColor.fromColor(con.AppBarBackgroundColor);
     var rng = new Random();
-    var colorHue = (p.hue - 30) + rng.nextInt(60) + rng.nextDouble();
+    var colorHue = (p.hue - 30) + rng.nextInt(50) + rng.nextDouble();
 
     return p.withHue(colorHue).toColor().withOpacity(0.7);
   }

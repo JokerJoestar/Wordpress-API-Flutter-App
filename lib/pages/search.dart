@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wp_flutter_app/helpers/ads.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -43,6 +44,8 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
+    Ads.hideBannerAd();
+
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -126,7 +129,7 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) {
                             if (index < _snapshot.data.length) {
                               return ArticleCard(
-                                  categories, favorites, _snapshot.data, index);
+                                  categories, favorites, _snapshot.data, index, pageIndex: 3,);
                             } else if (articles.hasMore) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wp_flutter_app/helpers/ads.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/category.dart';
 import 'package:wp_flutter_app/widgets/articlecard.dart';
@@ -44,6 +45,7 @@ class _FavoritesState extends State<Favorites> {
 
   @override
   void initState() {
+    Ads.hideBannerAd();
     getCategories();
     getFavorites().whenComplete(() => setState(() => _loaded = true));
     super.initState();
@@ -139,7 +141,7 @@ class _FavoritesState extends State<Favorites> {
 
                       return Dismissible(
                         child:
-                            ArticleCard(categories, favorites, favorites, index,
+                            ArticleCard(categories, favorites, favorites, index, pageIndex: 1,
                                 onDelete: () {
                           setState(() {
                             removeItem(index);

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wp_flutter_app/helpers/ads.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -42,6 +43,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    Ads.hideBannerAd();
     articles = ArticlesModel("${con.WordpressUrl}/wp-json/wp/v2/posts", null, null);
 
     _scrollController.addListener(() {
