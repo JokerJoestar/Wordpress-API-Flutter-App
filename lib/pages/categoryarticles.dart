@@ -42,7 +42,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
   void initState() {
     Ads.hideBannerAd();
     articles = ArticlesModel(
-        "${con.WordpressUrl}/wp-json/wp/v2/posts", widget.category.id, null);
+        "${con.WordpressUrl}wp-json/wp/v2/posts", widget.category.id, null);
 
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==

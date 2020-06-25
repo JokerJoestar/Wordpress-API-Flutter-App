@@ -74,7 +74,7 @@ class _SearchState extends State<Search> {
                       if (text != searchText && text.isNotEmpty) {
                         searchText = text;
                         articles = new ArticlesModel(
-                            "${con.WordpressUrl}/wp-json/wp/v2/posts", null, text);
+                            "${con.WordpressUrl}wp-json/wp/v2/posts", null, text);
                       }
                     });
                   },

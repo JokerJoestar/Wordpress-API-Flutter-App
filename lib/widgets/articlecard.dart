@@ -16,8 +16,10 @@ class ArticleCard extends StatefulWidget {
   final int index;
   final VoidCallback onDelete;
   final int pageIndex;
+  final bool showAd;
+
   ArticleCard(this.categories, this.favorites, this.articles, this.index,
-      {this.onDelete, this.pageIndex});
+      {this.onDelete, this.pageIndex, this.showAd});
 
   @override
   _ArticleCardState createState() => _ArticleCardState();
@@ -49,7 +51,11 @@ class _ArticleCardState extends State<ArticleCard> {
             onTap: () {
               Navigator.of(context).push(NoPageTransition(
                   page: ArticleView(
-                      articles: widget.articles, index: widget.index, pageIndex: widget.pageIndex != null ? widget.pageIndex : 0,)));
+                articles: widget.articles,
+                index: widget.index,
+                pageIndex: widget.pageIndex != null ? widget.pageIndex : 0,
+                showAd: widget.showAd != null ? widget.showAd : true,
+              )));
             },
             child: getCardView(article, context)));
   }

@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     Ads.hideBannerAd();
-    articles = ArticlesModel("${con.WordpressUrl}/wp-json/wp/v2/posts", null, null);
+    articles = ArticlesModel("${con.WordpressUrl}wp-json/wp/v2/posts", null, null);
 
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==

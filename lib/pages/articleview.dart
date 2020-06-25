@@ -11,8 +11,9 @@ class ArticleView extends StatefulWidget {
   final int pageIndex;
   final List<Article> articles;
   final int index;
+  final bool showAd;
 
-  const ArticleView({Key key, this.articles, this.index, this.pageIndex})
+  const ArticleView({Key key, this.articles, this.index, this.pageIndex, this.showAd})
       : super(key: key);
 
   @override
@@ -30,6 +31,7 @@ class _ArticleViewState extends State<ArticleView> {
   @override
   void initState() {
     super.initState();
+
     index = widget.index;
     pageController = PageController(initialPage: index);
 
@@ -39,16 +41,16 @@ class _ArticleViewState extends State<ArticleView> {
   }
 
   @override
-  void dispose() {
-    Ads.hideBannerAd();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    Ads.showBannerAd();
+    if(widget.showAd == true)
+      Ads.showBannerAd();
 
-    return CustomScaffold(
+    return WillPopScope(
+      onWillPop: () async {
+          Navigator.pop(context);
+          Ads.hideBannerAd();
+          return false;
+        }, child: CustomScaffold(
       pageIndex: widget.pageIndex,
       appBar: ArticleAppBar(article: article, key: _articleAppBarState),
       bodyWidget: PageView.builder(
@@ -86,7 +88,7 @@ class _ArticleViewState extends State<ArticleView> {
           });
         },
       ),
-    );
+    ));
   }
 }
 

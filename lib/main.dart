@@ -2,12 +2,18 @@ import 'dart:convert';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wp_flutter_app/models/category.dart';
+import 'helpers/ads.dart';
 import 'variables/constants.dart' as con;
 import 'package:http/http.dart' as http;
 import 'widgets/customscaffold.dart';
+import 'models/article.dart';
+import 'widgets/nopagetransition.dart';
+import 'pages/articleview.dart';
 
+// configure one signal correctly
 main() {
   runApp(MyApp());
 }
@@ -36,7 +42,8 @@ class MyApp extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      initialRoute: '/',
+      title: 'Wordpress Flutter App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: colorCustom,
@@ -176,8 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var tempCategories = new List<Category>();
 
       do {
-        var url =
-            con.WordpressUrl + "wp-json/wp/v2/categories?page=$page&per_page=40";
+        var url = "${con.WordpressUrl}/wp-json/wp/v2/categories?page=$page&per_page=40";
 
         var response =
             await http.get(url, headers: {'Content-Type': 'application/json'});
@@ -198,7 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
       } while (hasMore);
 
       //await widget.storage.writeJsonCategories(jsonEncode(tempCategories));
-      await sharedPreferences.setString('categories', jsonEncode(tempCategories));
+      await sharedPreferences.setString(
+          'categories', jsonEncode(tempCategories));
     });
   }
 
@@ -206,15 +213,83 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    FirebaseAdMob.instance.initialize(appId: "ca-app-pub-1990887568219834~5985307008");
+    initPlatformState();
+    FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-1990887568219834~5985307008");
     loadCategories().whenComplete(() => setState(() => _loaded = true));
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+
+    //OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    var settings = {
+      OSiOSSettings.autoPrompt: true,
+      OSiOSSettings.inAppLaunchUrl: true,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+
+    OneSignal.shared.setNotificationReceivedHandler((notification) {
+      setState(() => notification.payload.launchUrl = null);
+    });
+
+    OneSignal.shared.setNotificationOpenedHandler((result) {
+      OSNotificationPayload payload = result.notification.payload;
+      Map<String, dynamic> additionalData = payload.additionalData;
+
+      setState(() =>
+          openWebview(payload.body, additionalData["article"].toString()));
+    });
+
+    await OneSignal.shared
+        .init("8776c29b-18e7-43b8-a847-02d6dfeacd66", iOSSettings: settings);
+
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!_loaded)
-      return Container();
+    if (!_loaded) return Container();
 
     return CustomScaffold(scaffoldKey: _scaffoldKey);
+  }
+
+  void openWebview(String title, String url) async {
+    List<Article> articles = new List<Article>();
+    int jsonWays;
+
+    if (url.contains(con.WordpressUrl)) {
+      String urlEndpoint = "${con.WordpressUrl}/wp-json/wp/v2/posts";
+
+      if (url.contains("/?p=")) {
+        urlEndpoint += "/${url.substring(url.lastIndexOf("/?p=") + 4)}?_embed";
+        jsonWays = 0;
+      } else {
+        var urls = url.split("/");
+        urlEndpoint += "?slug=${urls[urls.length - 2]}&_embed";
+        jsonWays = 1;
+      }
+
+      var response = await http.get(urlEndpoint);
+
+      if (response.statusCode == 200) {
+        switch(jsonWays) {
+          case 0: {
+            articles.add(Article.fromJson(json.decode(response.body)));
+            break;
+          }
+          case 1: {
+            articles.addAll(json.decode(response.body).map<Article>((m) => Article.fromJson(m)).toList());
+            break;
+          }
+          default: break;
+        }
+
+        Navigator.push(context, NoPageTransition(
+            page: ArticleView(articles: articles, index: 0, pageIndex: 0, showAd: true,)));
+      }
+    }
   }
 }

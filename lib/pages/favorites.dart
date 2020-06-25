@@ -55,7 +55,7 @@ class _FavoritesState extends State<Favorites> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      if(index == null)
+      if (index == null)
         favorites = new List<Article>();
       else
         favorites = List.from(favorites)..removeAt(index);
@@ -99,67 +99,72 @@ class _FavoritesState extends State<Favorites> {
                   itemCount: favorites.length + 1,
                   staggeredTileBuilder: (int index) {
                     if (index == 0)
-                              return new StaggeredTile.fit(2);
-                            else
-                              return new StaggeredTile.fit(1);
+                      return new StaggeredTile.fit(2);
+                    else
+                      return new StaggeredTile.fit(1);
                   },
                   padding: const EdgeInsets.only(top: 5),
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
-                    if(index == 0) {
-                      return Padding(padding: EdgeInsets.only(left: 50, right: 50, bottom: 5), 
-                      child: RaisedButton(
-                      onPressed: () { 
-                        showDialog(context: context, child:
-                          new AlertDialog(
-                            contentPadding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                            content: new Text("Θέλετε να διαγράψατε όλα τα αποθηκευμένα άρθρα;", style: Theme.of(context).textTheme.headline4),
-                            actions: [
-                              FlatButton(
-                                color: Colors.grey[200],
-                                child: Text('Ναι', style: Theme.of(context).textTheme.headline6),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    removeItem(null);
-                                  });
-                                },
-                              ),
-                              FlatButton(
-                                color: Colors.grey[200],
-                                child: Text('Όχι', style: Theme.of(context).textTheme.headline6),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          )
-                      ); },
-                      child: Text('Διαγραφή όλων', style: Theme.of(context).textTheme.headline4)));
+                    if (index == 0) {
+                      return Padding(
+                          padding:
+                              EdgeInsets.only(left: 50, right: 50, bottom: 5),
+                          child: RaisedButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    child: new AlertDialog(
+                                      contentPadding: EdgeInsets.only(
+                                          left: 10, right: 10, top: 10),
+                                      content: new Text(
+                                          "Θέλετε να διαγράψατε όλα τα αποθηκευμένα άρθρα;",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4),
+                                      actions: [
+                                        FlatButton(
+                                          color: Colors.grey[200],
+                                          child: Text('Ναι',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            setState(() => removeItem(null));
+                                          },
+                                        ),
+                                        FlatButton(
+                                          color: Colors.grey[200],
+                                          child: Text('Όχι',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ));
+                              },
+                              child: Text('Διαγραφή όλων',
+                                  style:
+                                      Theme.of(context).textTheme.headline4)));
                     } else {
                       final item = favorites[--index];
 
                       return Dismissible(
-                        child:
-                            ArticleCard(categories, favorites, favorites, index, pageIndex: 1,
-                                onDelete: () {
-                          setState(() {
-                            removeItem(index);
-                          });
+                        child: ArticleCard(
+                            categories, favorites, favorites, index,
+                            pageIndex: 1, showAd: false, onDelete: () {
+                          setState(() => removeItem(index));
                         }),
                         onDismissed: (direction) {
-                          setState(() {
-                            removeItem(index);
-                          });
+                          setState(() => removeItem(index));
                         },
                         key: Key(item.link),
                       );
                     }
-                    /*return ArticleCard(
-                                  categories, favorites, favorites, index, onDelete: () { removeItem(index);
-                                  setState(() {
-                                    
-                                  }); });*/
                   }));
         }))),
       ]);
