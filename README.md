@@ -17,5 +17,5 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Known Bugs
-- black screen when app is on background (not on all devices)... no available fix https://www.reddit.com/r/Flutter/comments/fztzj7/apps_turn_black_in_android_app_switcher/
-- otan patas 2 notifications kai bgeis apo to teleutaio article sou kleinei to ad mob apo to dispose dokimasa na eleg3w me to stack tou navigator alla de doulepse swsta prepei na to koita3w kalutera
+- Black screen when app is on background (not on all devices)... flutter has this problem for some reason (admob shows tho, cause its internally android view), no available fix https://www.reddit.com/r/Flutter/comments/fztzj7/apps_turn_black_in_android_app_switcher/
+- When you open 2 notifcations and close the last article, ad mob closes cause it gets disposed (Ads.hideBannerAd()). Tried to use navigator stack to find out the type of widgets before the last article, but flutter doesn't have a variable to get stack elements.
