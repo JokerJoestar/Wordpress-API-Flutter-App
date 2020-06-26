@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wp_flutter_app/models/pageroute.dart' as pageRoute;
 import 'package:wp_flutter_app/pages/favorites.dart';
 import 'package:wp_flutter_app/pages/search.dart';
+import 'package:wp_flutter_app/pages/settings.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/pages/categories.dart';
 import 'package:wp_flutter_app/pages/home.dart';
@@ -39,6 +41,10 @@ class _CustomScaffoldState extends State<CustomScaffold> {
     pageRoute.PageRoute(
         iconData: Icons.search,
         page: Search()
+      ),
+    pageRoute.PageRoute(
+        iconData: Icons.settings,
+        page: Settings()
       )
   ];
 
@@ -74,9 +80,12 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                 constraints: BoxConstraints(maxHeight: 200, maxWidth: 200),
                 child: Padding(
                     padding: EdgeInsets.all(30),
-                    child: Image.asset('assets/images/logo.png',
+                    child: GestureDetector(onTap: () {
+                      if(canLaunch(con.WordpressUrl) != null)
+                        launch(con.WordpressUrl);
+                    }, child: Image.asset('assets/images/logo.png',
                         fit: BoxFit.fitHeight,
-                        alignment: Alignment.centerLeft)))) : _appBar,
+                        alignment: Alignment.centerLeft))))) : _appBar,
         body: getWidget(),
         bottomNavigationBar: BottomNavigationBar(
           key: _bottomNavigationKey,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -38,6 +39,10 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    final hsl = HSLColor.fromColor(con.AppBarBackgroundColor);
+
+    FlutterStatusbarcolor.setStatusBarColor(hsl.withLightness((hsl.lightness - 0.06).clamp(0.0, 1.0)).toColor());
 
     return MaterialApp(
       title: 'Wordpress Flutter App',
