@@ -13,7 +13,8 @@ class ArticleView extends StatefulWidget {
   final int index;
   final bool showAd;
 
-  const ArticleView({Key key, this.articles, this.index, this.pageIndex, this.showAd})
+  const ArticleView(
+      {Key key, this.articles, this.index, this.pageIndex, this.showAd})
       : super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class _ArticleViewState extends State<ArticleView> {
 
     index = widget.index;
     pageController = PageController(initialPage: index);
-
+    
     setState(() {
       article = widget.articles[index];
     });
@@ -42,53 +43,59 @@ class _ArticleViewState extends State<ArticleView> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.showAd == true)
+    if (widget.showAd == true)
       Ads.showBannerAd();
 
     return WillPopScope(
-      onWillPop: () async {
+        onWillPop: () async {
           Navigator.pop(context);
-          Ads.hideBannerAd();
+          if (widget.showAd == true) 
+            Ads.hideBannerAd();
+
           return false;
-        }, child: CustomScaffold(
-      pageIndex: widget.pageIndex,
-      appBar: ArticleAppBar(article: article, key: _articleAppBarState),
-      bodyWidget: PageView.builder(
-        itemBuilder: (context, int currentIdx) {
-          return NotificationListener<OverscrollIndicatorNotification>(
-              onNotification: (OverscrollIndicatorNotification overscroll) {
-                overscroll.disallowGlow();
-                return;
-              },
-              child: Padding(padding: EdgeInsets.only(bottom: Ads.getBannerAd() != null
-                                  ? Ads.getBannerAd().size.height.toDouble()
-                                  : 0), child: ListView.builder(
-                  itemCount: 1,
-                  itemBuilder: (context, int index) {
-                      return Column(children: [
-                        Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Text(
-                              widget.articles[currentIdx].title,
-                              softWrap: true,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.overline,
-                            )),
-                        HtmlWidget(widget.articles[currentIdx].content,
-                            webView: false)
-                      ]);
-                  })));
         },
-        itemCount: widget.articles.length,
-        controller: pageController,
-        onPageChanged: (pageId) {
-          setState(() {
-            article = widget.articles[pageId];
-            _articleAppBarState.currentState.reRender(article);
-          });
-        },
-      ),
-    ));
+        child: CustomScaffold(
+          pageIndex: widget.pageIndex,
+          appBar: ArticleAppBar(article: article, key: _articleAppBarState),
+          bodyWidget: PageView.builder(
+            itemBuilder: (context, int currentIdx) {
+              return NotificationListener<OverscrollIndicatorNotification>(
+                  onNotification: (OverscrollIndicatorNotification overscroll) {
+                    overscroll.disallowGlow();
+                    return;
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: Ads.getBannerAd() != null
+                              ? Ads.getBannerAd().size.height.toDouble()
+                              : 0),
+                      child: ListView.builder(
+                          itemCount: 1,
+                          itemBuilder: (context, int index) {
+                            return Column(children: [
+                              Padding(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    widget.articles[currentIdx].title,
+                                    softWrap: true,
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.overline,
+                                  )),
+                              HtmlWidget(widget.articles[currentIdx].content,
+                                  webView: false)
+                            ]);
+                          })));
+            },
+            itemCount: widget.articles.length,
+            controller: pageController,
+            onPageChanged: (pageId) {
+              setState(() {
+                article = widget.articles[pageId];
+                _articleAppBarState.currentState.reRender(article);
+              });
+            },
+          ),
+        ));
   }
 }
 

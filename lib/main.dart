@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wp_flutter_app/models/category.dart';
-import 'helpers/ads.dart';
 import 'variables/constants.dart' as con;
 import 'package:http/http.dart' as http;
 import 'widgets/customscaffold.dart';
@@ -13,7 +12,6 @@ import 'models/article.dart';
 import 'widgets/nopagetransition.dart';
 import 'pages/articleview.dart';
 
-// configure one signal correctly
 main() {
   runApp(MyApp());
 }
@@ -42,7 +40,6 @@ class MyApp extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      initialRoute: '/',
       title: 'Wordpress Flutter App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -288,7 +285,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
 
         Navigator.push(context, NoPageTransition(
-            page: ArticleView(articles: articles, index: 0, pageIndex: 0, showAd: true,)));
+            page: ArticleView(articles: articles, index: 0, pageIndex: 0, showAd: false,)));
       }
     }
   }
