@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
+import 'package:wp_flutter_app/widgets/customscaffold.dart';
+import 'aboutus.dart';
+import 'package:wp_flutter_app/widgets/nopagetransition.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
@@ -33,6 +36,9 @@ class _SettingsState extends State<Settings> {
 
     return status.subscriptionStatus.subscribed;
   }
+
+  // https://www.thirdrocktechkno.com/blog/how-to-implement-localization-in-flutter
+  // I can use that and shared preferences to create multiple languages on application
 
   Widget settingsWidget() {
     if (!_loaded) return Container();
@@ -83,8 +89,11 @@ class _SettingsState extends State<Settings> {
                           child: Text('Στοιχεία Επικοινωνίας',
                               style: Theme.of(context).textTheme.headline4)),
                       onTap: () {
-                        setState(() {
-                        });
+                        Navigator.of(context).push(NoPageTransition(
+                            page: CustomScaffold(
+                                showBackButton: true,
+                                pageIndex: 4,
+                                bodyWidget: AboutUs())));
                       },
                     ),
                   ),
@@ -94,7 +103,7 @@ class _SettingsState extends State<Settings> {
                       leading: Icon(Icons.feedback, color: Colors.black),
                       title: Transform(
                           transform: Matrix4.translationValues(-16, 0.0, 0.0),
-                          child: Text('Ανατροφοδότηση',
+                          child: Text('Ανατροφοδότηση εφαρμογής',
                               style: Theme.of(context).textTheme.headline4)),
                       onTap: () {
                         setState(() {

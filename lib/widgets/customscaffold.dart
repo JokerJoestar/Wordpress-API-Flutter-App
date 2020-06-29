@@ -12,10 +12,11 @@ class CustomScaffold extends StatefulWidget {
   final Widget bodyWidget;
   final int pageIndex;
   final Widget appBar;
+  final bool showBackButton;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   const CustomScaffold(
-      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex, this.appBar})
+      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex, this.appBar, this.showBackButton})
       : super(key: key);
 
   @override
@@ -51,6 +52,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   int _pageIndex = 0;
   Widget _bodyWidget;
   Widget _appBar;
+  bool _showBackButton = false;
 
   @override
   void initState() {
@@ -61,6 +63,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
         _pageIndex = widget.pageIndex;
         _bodyWidget = widget.bodyWidget;
         _appBar = widget.appBar;
+        _showBackButton = widget.showBackButton;
       });
     }
   }
@@ -74,7 +77,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
         appBar: _appBar == null ? AppBar(
             brightness: Brightness.dark,
             backgroundColor: con.AppBarBackgroundColor,
-            leading: new Container(width: 0, height: 0),
+            leading: _showBackButton != true ? Container(width: 0, height: 0) : null,
             centerTitle: true,
             title: ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 200, maxWidth: 200),
