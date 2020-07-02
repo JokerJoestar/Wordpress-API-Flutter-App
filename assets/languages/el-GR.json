@@ -1,0 +1,23 @@
+{
+    "notifications": "Ειδοποιήσεις",
+    "contact_details": "Στοιχεία Επικοινωνίας",
+    "app_feedback": "Ανατροφοδότηση Εφαρμογής",
+    "change_language": "Αλλαγή Γλώσσας",
+    "disable_notifications": "Μόλις απενεργοποιήσατε την λήψη ειδοποιήσεων.",
+    "enable_notifications": "Μόλις ενεργοποιήσατε την λήψη ειδοποιήσεων.",
+    "search": "Αναζήτηση...",
+    "no_connection": "Δεν υπάρχει σύνδεση στον διακομιστή.",
+    "no_categories_found": "Δεν βρέθηκαν κατηγορίες.",
+    "no_more_articles": "Δεν βρέθηκαν άλλα άρθρα.",
+    "about_us": "Σχετικά με εμάς",
+    "manager": "Υπεύθυνος",
+    "location": "Τοποθεσία",
+    "social_media": "Κοινωνικά Δίκτυα",
+    "contact": "Επικοινωνία",
+    "no_saved_articles": "Δεν βρέθηκαν \nαποθηκευμένα άρθρα.",
+    "confirm_delete_saved_articles": "Θέλετε να διαγράψατε όλα τα αποθηκευμένα άρθρα;",
+    "yes": "Ναι",
+    "no": "Όχι",
+    "ok": "Ok",
+    "delete_all_saved_articles": "Διαγραφή όλων"
+}

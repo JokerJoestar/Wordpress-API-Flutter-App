@@ -1,0 +1,23 @@
+{
+    "notifications": "Notifications",
+    "contact_details": "Contact Details",
+    "app_feedback": "Application Feedback",
+    "change_language": "Change Language",
+    "disable_notifications": "You will stop receiving notifications from now on.",
+    "enable_notifications": "You will start receiving notifications from now on.",
+    "search": "Search...",
+    "no_connection": "No connection to server.",
+    "no_categories_found": "Couldn't find categories.",
+    "no_more_articles": "Couldn't find more articles.",
+    "about_us": "About us",
+    "manager": "Manager",
+    "location": "Location",
+    "social_media": "Social Media",
+    "contact": "Contact us",
+    "no_saved_articles": "Couldn't find \nsaved articles.",
+    "confirm_delete_saved_articles": "Do you want to delete all saved articles?",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "Ok",
+    "delete_all_saved_articles": "Delete all"
+}

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "338407673179",
+    "firebase_url": "https://wp-flutter-app-notifications.firebaseio.com",
+    "project_id": "wp-flutter-app-notifications",
+    "storage_bucket": "wp-flutter-app-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338407673179:android:6db3c14a930406725ede7e",
+        "android_client_info": {
+          "package_name": "com.example.wp_flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338407673179-hdkr0fm9ik23cdns6ab7tgfsj6ntmapa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbSD3-WjDJxQRX2GAdInfnyXfZZARWfTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338407673179-hdkr0fm9ik23cdns6ab7tgfsj6ntmapa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

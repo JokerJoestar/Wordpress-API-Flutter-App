@@ -1,9 +1,7 @@
-import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wp_flutter_app/helpers/ads.dart';
+import 'package:wp_flutter_app/helpers/dataInitialization.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
@@ -22,25 +20,10 @@ class CategoryArticles extends StatefulWidget {
 class _CategoryArticlesState extends State<CategoryArticles> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
-  List<Article> favorites;
-
-  void getFavorites() async {
-    favorites = new List<Article>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var favoritesString = prefs.getString('favorites');
-
-    if (favoritesString != null) {
-      favorites.addAll(json
-          .decode(favoritesString)
-          .map<Article>((m) => Article.simpleFromJson(m))
-          .toList());
-    }
-  }
-
+  List<Article> favorites = new List<Article>();
+  
   @override
   void initState() {
-    Ads.hideBannerAd();
     articles = ArticlesModel(
         "${con.WordpressUrl}wp-json/wp/v2/posts", widget.category.id, null);
 
@@ -51,7 +34,8 @@ class _CategoryArticlesState extends State<CategoryArticles> {
       }
     });
 
-    getFavorites();
+    DataInitialization.getFavorites(favorites).then((value) => favorites == value);
+
     super.initState();
   }
 
@@ -102,13 +86,17 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
                             if (index == 0) {
+                              if(_snapshot.data.length != 0)
                               return Padding(
                                   padding: EdgeInsets.only(bottom: 5),
                                   child: Text(categoryName,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                       textAlign: TextAlign.center));
-                            } else if (index < _snapshot.data.length + 1) {
+                              else 
+                                return Container();
+                            }
+                            if (index < _snapshot.data.length + 1) {
                               return ArticleCard(
                                 null,
                                 favorites,
@@ -116,7 +104,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                                 --index,
                                 pageIndex: 2,
                               );
-                            } else if (articles.hasMore) {
+                            } else if (articles.hasMore == true) {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),
                                 child: Center(
@@ -130,7 +118,7 @@ class _CategoryArticlesState extends State<CategoryArticles> {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),
                                 child: Center(
-                                    child: Text('Δεν βρέθηκαν άλλα άρθρα.',
+                                    child: Text("no_more_articles".tr(),
                                         style: TextStyle(
                                             fontFamily: 'PFDInSerif-Bold',
                                             fontSize: 18))),

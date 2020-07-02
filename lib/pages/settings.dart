@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
-import 'package:wp_flutter_app/widgets/customscaffold.dart';
 import 'aboutus.dart';
 import 'package:wp_flutter_app/widgets/nopagetransition.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
@@ -17,6 +17,8 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   bool _loaded = false;
   bool _isUserSubscribed;
+  Locale _selectedLocale;
+  Widget dropDownMenu;
 
   @override
   void initState() {
@@ -28,7 +30,9 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(body: settingsWidget());
+    if (_selectedLocale == null) _selectedLocale = context.locale;
+
+    return Scaffold(body: settingsWidget(context));
   }
 
   Future<bool> isUserOSSubscribed() async {
@@ -37,10 +41,7 @@ class _SettingsState extends State<Settings> {
     return status.subscriptionStatus.subscribed;
   }
 
-  // https://www.thirdrocktechkno.com/blog/how-to-implement-localization-in-flutter
-  // I can use that and shared preferences to create multiple languages on application
-
-  Widget settingsWidget() {
+  Widget settingsWidget(BuildContext context) {
     if (!_loaded) return Container();
 
     return Column(children: [
@@ -60,7 +61,7 @@ class _SettingsState extends State<Settings> {
                           : Icon(Icons.notifications_off, color: Colors.black),
                       title: Transform(
                           transform: Matrix4.translationValues(-16, 0.0, 0.0),
-                          child: Text('Ειδοποιήσεις',
+                          child: Text("notifications".tr(),
                               style: Theme.of(context).textTheme.headline4)),
                       trailing: CupertinoSwitch(
                         activeColor: con.AppBarBackgroundColor,
@@ -83,17 +84,14 @@ class _SettingsState extends State<Settings> {
                   Container(height: 1, color: Colors.grey[350]),
                   MergeSemantics(
                     child: ListTile(
-                      leading: Icon(Icons.opacity, color: Colors.black),
+                      leading: Icon(Icons.contacts, color: Colors.black),
                       title: Transform(
                           transform: Matrix4.translationValues(-16, 0.0, 0.0),
-                          child: Text('Στοιχεία Επικοινωνίας',
+                          child: Text("contact_details".tr(),
                               style: Theme.of(context).textTheme.headline4)),
                       onTap: () {
                         Navigator.of(context).push(NoPageTransition(
-                            page: CustomScaffold(
-                                showBackButton: true,
-                                pageIndex: 4,
-                                bodyWidget: AboutUs())));
+                            page: AboutUs()));
                       },
                     ),
                   ),
@@ -103,16 +101,49 @@ class _SettingsState extends State<Settings> {
                       leading: Icon(Icons.feedback, color: Colors.black),
                       title: Transform(
                           transform: Matrix4.translationValues(-16, 0.0, 0.0),
-                          child: Text('Ανατροφοδότηση εφαρμογής',
+                          child: Text("app_feedback".tr(),
                               style: Theme.of(context).textTheme.headline4)),
                       onTap: () {
                         setState(() {
-                          launch('mailto:asdasdas@asdasdasd.gr?subject=Ανατροφοδότηση εφαρμογής&body=');
+                          launch('mailto:asdasdas@asdasdasd.gr?subject=' +
+                              "app_feedback".tr() +
+                              '&body=');
                         });
                       },
                     ),
                   ),
                   Container(height: 1, color: Colors.grey[350]),
+                  MergeSemantics(
+                    child: ListTile(
+                        leading: Icon(Icons.language, color: Colors.black),
+                        title: Transform(
+                            transform: Matrix4.translationValues(-16, 0.0, 0.0),
+                            child: Text("change_language".tr(),
+                                style: Theme.of(context).textTheme.headline4)),
+                        trailing: DropdownButtonHideUnderline(
+                          child: DropdownButton<Locale>(
+                            value: _selectedLocale,
+                            onChanged: (value) {
+                              _selectedLocale = value;
+
+                              this.setState(() {
+                                context.locale = _selectedLocale;
+                              });
+                            },
+                            items: context.supportedLocales.map((Locale value) {
+                              return new DropdownMenuItem<Locale>(
+                                value: value,
+                                child: new Text(value.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(fontSize: 20)),
+                              );
+                            }).toList(),
+                          ),
+                        )),
+                  ),
+                  Container(height: 1, color: Colors.grey[350])
                 ],
               )))
     ]);
@@ -128,13 +159,14 @@ class _SettingsState extends State<Settings> {
             contentPadding: EdgeInsets.only(left: 10, right: 10, top: 10),
             content: new Text(
                 sub
-                    ? "Μόλις ενεργοποιήσατε την λήψη ειδοποιήσεων."
-                    : "Μόλις απενεργοποιήσατε την λήψη ειδοποιήσεων.",
+                    ? "enable_notifications".tr()
+                    : "disable_notifications".tr(),
                 style: Theme.of(context).textTheme.headline4),
             actions: [
               FlatButton(
                 color: Colors.grey[200],
-                child: Text('Ok', style: Theme.of(context).textTheme.headline6),
+                child: Text("ok".tr(),
+                    style: Theme.of(context).textTheme.headline6),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

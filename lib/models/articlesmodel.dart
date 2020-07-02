@@ -22,7 +22,7 @@ class ArticlesModel {
     this.searchText = searchText;
     this.categoryId = categoryId;
 
-    _data = List<Article>();
+    //_data = List<Article>();
     _controller = StreamController<List<Article>>.broadcast();
     _isLoading = false;
 
@@ -47,6 +47,7 @@ class ArticlesModel {
       page = 0;
       hasMore = true;
     }
+
     if (_isLoading || !hasMore) {
       return Future.value();
     }
@@ -56,13 +57,16 @@ class ArticlesModel {
 
     return loadArticles(endpointUrl, page, categoryId, searchText).then((articlesData) {
       _isLoading = false;
-      _data.addAll(articlesData);
+      if(articlesData == null) 
+        _data = null;
+      else 
+        _data.addAll(articlesData);
       _controller.add(_data);
     });
   }
 
   Future<List<Article>> loadArticles(String endpointUrl, int page, int categoryId, String searchText) async {
-    var tempArticles = new List<Article>();
+    var tempArticles;
     var url = endpointUrl + "?page=$page&per_page=${con.PostsPerPage}&_embed";
   
     if(categoryId != null) {
@@ -77,20 +81,25 @@ class ArticlesModel {
       url += "&search=$searchText";
     }
 
-    var response = await http.get(url);
+    try {
+      var response = await http.get(url);
+      tempArticles = new List<Article>();
+      hasMore = true;
 
-    hasMore = true;
+      if (response.statusCode == 200) {
+        tempArticles.addAll(json
+            .decode(response.body)
+            .map<Article>((m) => Article.fromJson(m))
+            .toList());
 
-    if (response.statusCode == 200) {
-      tempArticles.addAll(json
-          .decode(response.body)
-          .map<Article>((m) => Article.fromJson(m))
-          .toList());
-
-      if (tempArticles.length % con.PostsPerPage != 0) {
-        hasMore = false;
+        if (tempArticles.length % con.PostsPerPage != 0) {
+          hasMore = false;
+        }
       }
-    }
+    } catch (e) { }
+
+    if(tempArticles == null)
+      hasMore = false;
 
     return tempArticles;
   }

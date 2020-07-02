@@ -1,20 +1,27 @@
 import 'dart:convert';
-import 'package:firebase_admob/firebase_admob.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wp_flutter_app/models/category.dart';
 import 'variables/constants.dart' as con;
 import 'package:http/http.dart' as http;
+import 'package:wp_flutter_app/helpers/dataInitialization.dart';
 import 'widgets/customscaffold.dart';
 import 'models/article.dart';
 import 'widgets/nopagetransition.dart';
 import 'pages/articleview.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 
 main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize without device test ids
+  Admob.initialize();
+  runApp(EasyLocalization(
+      supportedLocales: [Locale('en', 'US'), Locale('el', 'GR')],
+      path: 'assets/languages',
+      fallbackLocale: Locale('el', 'GR'), child: MyApp()));
 }
 
 Map<int, Color> color = {
@@ -33,6 +40,7 @@ Map<int, Color> color = {
 MaterialColor colorCustom = MaterialColor(0xFF1A1A1A, color);
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -45,6 +53,9 @@ class MyApp extends StatelessWidget {
     FlutterStatusbarcolor.setStatusBarColor(hsl.withLightness((hsl.lightness - 0.06).clamp(0.0, 1.0)).toColor());
 
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       title: 'Wordpress Flutter App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -177,55 +188,29 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _loaded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Future<void> loadCategories() async {
-    await SharedPreferences.getInstance().then((SharedPreferences prefs) async {
-      sharedPreferences = prefs;
-      var page = 1;
-      bool hasMore = true;
-      var tempCategories = new List<Category>();
-
-      do {
-        var url = "${con.WordpressUrl}/wp-json/wp/v2/categories?page=$page&per_page=40";
-
-        var response =
-            await http.get(url, headers: {'Content-Type': 'application/json'});
-
-        if (response.statusCode == 200) {
-          tempCategories.addAll(json
-              .decode(response.body)
-              .map<Category>((m) => Category.fromJson(m))
-              .toList());
-
-          if (tempCategories.length % 40 != 0) {
-            hasMore = false;
-            break;
-          }
-        }
-
-        page++;
-      } while (hasMore);
-
-      //await widget.storage.writeJsonCategories(jsonEncode(tempCategories));
-      await sharedPreferences.setString(
-          'categories', jsonEncode(tempCategories));
-    });
-  }
-
   @override
   void initState() {
     super.initState();
 
     initPlatformState();
-    FirebaseAdMob.instance
-        .initialize(appId: "ca-app-pub-1990887568219834~5985307008");
-    loadCategories().whenComplete(() => setState(() => _loaded = true));
+    Admob.initialize(testDeviceIds: ["EE12B2D340E1ADC675D4D752691F0266"]);
+    DataInitialization.loadCategories().whenComplete(() => setState(() => _loaded = true));
   }
 
   Future<void> initPlatformState() async {
     if (!mounted) return;
 
     //OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    await SharedPreferences.getInstance().then((SharedPreferences prefs) async {
+      sharedPreferences = prefs;
 
+      // initialize OS subscription the first time the app loads
+      if(prefs.getString("notifications") == null) {
+        OneSignal.shared.setSubscription(true);
+        prefs.setString("notifications", "");
+      }
+    });
+    
     var settings = {
       OSiOSSettings.autoPrompt: true,
       OSiOSSettings.inAppLaunchUrl: true,
@@ -290,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
 
         Navigator.push(context, NoPageTransition(
-            page: ArticleView(articles: articles, index: 0, pageIndex: 0, showAd: false,)));
+            page: ArticleView(articles: articles, index: 0, pageIndex: 0)));
       }
     }
   }

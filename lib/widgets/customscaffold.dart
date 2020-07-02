@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wp_flutter_app/models/pageroute.dart' as pageRoute;
 import 'package:wp_flutter_app/pages/favorites.dart';
 import 'package:wp_flutter_app/pages/search.dart';
@@ -12,11 +11,10 @@ class CustomScaffold extends StatefulWidget {
   final Widget bodyWidget;
   final int pageIndex;
   final Widget appBar;
-  final bool showBackButton;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   const CustomScaffold(
-      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex, this.appBar, this.showBackButton})
+      {Key key, this.bodyWidget, this.scaffoldKey, this.pageIndex, this.appBar})
       : super(key: key);
 
   @override
@@ -52,7 +50,6 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   int _pageIndex = 0;
   Widget _bodyWidget;
   Widget _appBar;
-  bool _showBackButton = false;
 
   @override
   void initState() {
@@ -63,7 +60,6 @@ class _CustomScaffoldState extends State<CustomScaffold> {
         _pageIndex = widget.pageIndex;
         _bodyWidget = widget.bodyWidget;
         _appBar = widget.appBar;
-        _showBackButton = widget.showBackButton;
       });
     }
   }
@@ -77,18 +73,15 @@ class _CustomScaffoldState extends State<CustomScaffold> {
         appBar: _appBar == null ? AppBar(
             brightness: Brightness.dark,
             backgroundColor: con.AppBarBackgroundColor,
-            leading: _showBackButton != true ? Container(width: 0, height: 0) : null,
+            leading: Container(width: 0, height: 0),
             centerTitle: true,
             title: ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 200, maxWidth: 200),
                 child: Padding(
                     padding: EdgeInsets.all(30),
-                    child: GestureDetector(onTap: () {
-                      if(canLaunch(con.WordpressUrl) != null)
-                        launch(con.WordpressUrl);
-                    }, child: Image.asset('assets/images/logo.png',
+                    child: Image.asset('assets/images/logo.png',
                         fit: BoxFit.fitHeight,
-                        alignment: Alignment.centerLeft))))) : _appBar,
+                        alignment: Alignment.centerLeft)))) : _appBar,
         body: getWidget(),
         bottomNavigationBar: BottomNavigationBar(
           key: _bottomNavigationKey,

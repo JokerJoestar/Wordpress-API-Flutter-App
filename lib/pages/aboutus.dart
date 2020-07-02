@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:wp_flutter_app/widgets/customscaffold.dart';
 
 class AboutUs extends StatefulWidget {
   const AboutUs({Key key}) : super(key: key);
@@ -17,7 +19,17 @@ class _AboutUsState extends State<AboutUs> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(body: aboutUsWidget());
+    return CustomScaffold(bodyWidget: aboutUsWidget(), pageIndex: 4, appBar: AppBar(
+            brightness: Brightness.dark,
+            backgroundColor: con.AppBarBackgroundColor,
+            centerTitle: true,
+            title: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 200, maxWidth: 200),
+                child: Padding(
+                    padding: EdgeInsets.all(30),
+                    child: Image.asset('assets/images/logo.png',
+                        fit: BoxFit.fitHeight,
+                        alignment: Alignment.centerLeft)))));
   }
 
   Widget aboutUsWidget() {
@@ -31,7 +43,7 @@ class _AboutUsState extends State<AboutUs> {
               child: ListView(
                 padding: const EdgeInsets.all(0),
                 children: <Widget>[
-                  sectionHeader("Σχετικά με εμάς"),
+                  sectionHeader("about_us".tr()),
                   Padding(
                       padding: EdgeInsets.only(top: 5, left: 8, right: 8),
                       child: RichText(
@@ -45,7 +57,7 @@ class _AboutUsState extends State<AboutUs> {
                               children: <TextSpan>[
                                 TextSpan(text: con.siteInformation.description),
                                 TextSpan(
-                                    text: "\nΥπεύθυνος: ",
+                                    text: "\n" + 'manager'.tr() + ": ",
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline2
@@ -93,7 +105,7 @@ class _AboutUsState extends State<AboutUs> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          sectionHeader("Τοποθεσία"),
+          sectionHeader("location".tr()),
           Padding(
               padding: EdgeInsets.only(top: 5, left: 8, right: 8),
               child: GestureDetector(
@@ -114,7 +126,7 @@ class _AboutUsState extends State<AboutUs> {
     if (con.siteInformation.socialMedia != null &&
         con.siteInformation.socialMedia.length > 0) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        sectionHeader("Κοινωνικά Δίκτυα"),
+        sectionHeader("social_media".tr()),
         socialMediaWidgetList()
       ]);
     } else
@@ -129,6 +141,7 @@ class _AboutUsState extends State<AboutUs> {
     for (var i = 0; i < smList.length; i++) {
       list.add(
         IconButton(
+          splashRadius: 22,
             padding: EdgeInsets.only(right: 1),
             iconSize: 23,
             icon: Icon((smList[i].icon), color: con.AppBarBackgroundColor),
@@ -149,7 +162,7 @@ class _AboutUsState extends State<AboutUs> {
         con.siteInformation.emails.length > 0) {
       return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [sectionHeader("Επικοινωνία"), commWidgetList()]);
+          children: [sectionHeader("contact".tr()), commWidgetList()]);
     } else
       return Container();
   }

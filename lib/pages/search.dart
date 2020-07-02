@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wp_flutter_app/helpers/ads.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/articlesmodel.dart';
 import 'package:wp_flutter_app/models/category.dart';
 import 'package:wp_flutter_app/variables/constants.dart' as con;
 import 'package:wp_flutter_app/widgets/articlecard.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:wp_flutter_app/helpers/dataInitialization.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -17,35 +16,12 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final _scrollController = ScrollController();
   ArticlesModel articles;
-  List<Category> categories;
-  List<Article> favorites;
+  List<Category> categories = new List<Category>();
+  List<Article> favorites = new List<Article>();
   String searchText;
-
-  void getCategories() async {
-    categories = new List<Category>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var categoriesString = prefs.getString('categories');
-
-    categories.addAll(
-        json.decode(categoriesString).map<Category>((m) => Category.fromJson(m)).toList());
-  }
-
-  void getFavorites() async {
-    favorites = new List<Article>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var favoritesString = prefs.getString('favorites');
-
-    if(favoritesString != null) {
-      favorites.addAll(json.decode(favoritesString).map<Article>((m) => Article.simpleFromJson(m)).toList());
-    }
-  }
 
   @override
   void initState() {
-    Ads.hideBannerAd();
-
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -53,8 +29,8 @@ class _SearchState extends State<Search> {
       }
     });
 
-    getCategories();
-    getFavorites();
+    DataInitialization.getCategories(categories).then((value) => categories == value);
+    DataInitialization.getFavorites(favorites).then((value) => favorites == value);
 
     super.initState();
   }
@@ -83,7 +59,7 @@ class _SearchState extends State<Search> {
                       contentPadding:
                           EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                       prefixIcon: Icon(Icons.search, size: 30),
-                      hintText: "Αναζήτηση...",
+                      hintText: "search".tr(),
                       hintStyle: TextStyle(fontSize: 21),
                       fillColor: Colors.black12,
                       border: OutlineInputBorder(
@@ -144,7 +120,7 @@ class _SearchState extends State<Search> {
                               return Padding(
                                 padding: EdgeInsets.only(bottom: 16.0),
                                 child: Center(
-                                    child: Text('Δεν βρέθηκαν άλλα άρθρα.',
+                                    child: Text("no_more_articles".tr(),
                                         style: TextStyle(
                                             fontFamily: 'PFDInSerif-Bold',
                                             fontSize: 18))),

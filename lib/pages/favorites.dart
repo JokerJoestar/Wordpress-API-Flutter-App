@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wp_flutter_app/helpers/ads.dart';
+import 'package:wp_flutter_app/helpers/dataInitialization.dart';
 import 'package:wp_flutter_app/models/article.dart';
 import 'package:wp_flutter_app/models/category.dart';
 import 'package:wp_flutter_app/widgets/articlecard.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Favorites extends StatefulWidget {
   @override
@@ -13,41 +14,14 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
-  List<Category> categories;
-  List<Article> favorites;
+  List<Category> categories = new List<Category>();
+  List<Article> favorites = new List<Article>();
   bool _loaded = false;
-
-  void getCategories() async {
-    categories = new List<Category>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var categoriesString = prefs.getString('categories');
-
-    categories.addAll(json
-        .decode(categoriesString)
-        .map<Category>((m) => Category.fromJson(m))
-        .toList());
-  }
-
-  Future<void> getFavorites() async {
-    favorites = new List<Article>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var favoritesString = prefs.getString('favorites');
-
-    if (favoritesString != null) {
-      favorites.addAll(json
-          .decode(favoritesString)
-          .map<Article>((m) => Article.simpleFromJson(m))
-          .toList());
-    }
-  }
 
   @override
   void initState() {
-    Ads.hideBannerAd();
-    getCategories();
-    getFavorites().whenComplete(() => setState(() => _loaded = true));
+    DataInitialization.getCategories(categories).then((value) => categories == value);
+    DataInitialization.getFavorites(favorites).then((value) => favorites == value).whenComplete(() => setState(() => _loaded = true));
     super.initState();
   }
 
@@ -77,7 +51,7 @@ class _FavoritesState extends State<Favorites> {
       return Padding(
         padding: EdgeInsets.all(16.0),
         child: Center(
-            child: Text('Δεν βρέθηκαν \nαποθηκευμένα άρθρα.',
+            child: Text("no_saved_articles".tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'PFDInSerif-Bold', fontSize: 23))),
       );
@@ -118,36 +92,36 @@ class _FavoritesState extends State<Favorites> {
                                       contentPadding: EdgeInsets.only(
                                           left: 10, right: 10, top: 10),
                                       content: new Text(
-                                          "Θέλετε να διαγράψατε όλα τα αποθηκευμένα άρθρα;",
+                                          "confirm_delete_saved_articles".tr(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline4),
                                       actions: [
                                         FlatButton(
                                           color: Colors.grey[200],
-                                          child: Text('Ναι',
+                                          child: Text("yes".tr(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
                                           onPressed: () {
                                             Navigator.of(context).pop();
-                                            setState(() => removeItem(null));
+                                            removeItem(null);
                                           },
                                         ),
                                         FlatButton(
                                           color: Colors.grey[200],
-                                          child: Text('Όχι',
+                                          child: Text("no".tr(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                        ),
+                                        ),  
                                       ],
                                     ));
                               },
-                              child: Text('Διαγραφή όλων',
+                              child: Text("delete_all_saved_articles".tr(),
                                   style:
                                       Theme.of(context).textTheme.headline4)));
                     } else {
@@ -156,7 +130,7 @@ class _FavoritesState extends State<Favorites> {
                       return Dismissible(
                         child: ArticleCard(
                             categories, favorites, favorites, index,
-                            pageIndex: 1, showAd: false, onDelete: () {
+                            pageIndex: 1, onDelete: () {
                           setState(() => removeItem(index));
                         }),
                         onDismissed: (direction) {

@@ -39,13 +39,15 @@ dependencies:
   firebase_admob: ^0.9.3+2
   flutter_statusbarcolor: ^0.2.3
   font_awesome_flutter: ^8.8.1
-  
+  easy_localization:
+  admob_flutter: "^1.0.0-beta.5"
+
 dev_dependencies:
   flutter_launcher_icons:
   flutter_test:
     sdk: flutter
 
-# Run "flutter pub run flutter_launcher_icons:main" to setup the icon then build apk
+# Run "flutter pub run flutter_launcher_icons:main" to setup the icon, then build apk
 flutter_icons:
   android: "launcher_icon" 
   ios: true
@@ -57,6 +59,7 @@ flutter_icons:
 flutter:
   assets:     
     - assets/images/
+    - assets/languages/
 
   fonts:
     - family: Direct-Bold    
