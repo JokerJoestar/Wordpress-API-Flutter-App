@@ -57,7 +57,7 @@ class _AboutUsState extends State<AboutUs> {
                               children: <TextSpan>[
                                 TextSpan(text: con.siteInformation.description),
                                 TextSpan(
-                                    text: "\n" + 'manager'.tr() + ": ",
+                                    text: "\n${'manager'.tr()}: ",
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline2

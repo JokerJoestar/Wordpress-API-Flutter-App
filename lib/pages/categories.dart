@@ -35,6 +35,7 @@ class _CategoriesState extends State<Categories> {
   }
 
   Widget build(BuildContext context) {
+        categories = new List<Category>();
     return Scaffold(body: futureWidget());
   }
 

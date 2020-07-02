@@ -31,7 +31,6 @@ class CategoryCard extends StatelessWidget {
   getCardView(BuildContext context) {
     var size = MediaQuery.of(context).size.width / 2 - 52;
     return ClipRRect(
-      //borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0) ),
       child: Container(
           height: size,
           color: getRandomColor(),
@@ -44,7 +43,7 @@ class CategoryCard extends StatelessWidget {
   getRandomColor() {
     var p = HSLColor.fromColor(con.AppBarBackgroundColor);
     var rng = new Random();
-    var colorHue = (p.hue - 30) + rng.nextInt(50) + rng.nextDouble();
+    var colorHue = (p.hue - 30) + rng.nextInt(40) + rng.nextDouble();
 
     return p.withHue(colorHue).toColor().withOpacity(0.7);
   }

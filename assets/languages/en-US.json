@@ -2,6 +2,7 @@
     "notifications": "Notifications",
     "contact_details": "Contact Details",
     "app_feedback": "Application Feedback",
+    "app_version": "Application Version: {}\nDeveloped by {}",
     "change_language": "Change Language",
     "disable_notifications": "You will stop receiving notifications from now on.",
     "enable_notifications": "You will start receiving notifications from now on.",

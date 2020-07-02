@@ -16,8 +16,8 @@ import 'package:admob_flutter/admob_flutter.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize without device test ids
   Admob.initialize();
+
   runApp(EasyLocalization(
       supportedLocales: [Locale('en', 'US'), Locale('el', 'GR')],
       path: 'assets/languages',
@@ -43,12 +43,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hsl = HSLColor.fromColor(con.AppBarBackgroundColor);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
-    final hsl = HSLColor.fromColor(con.AppBarBackgroundColor);
 
     FlutterStatusbarcolor.setStatusBarColor(hsl.withLightness((hsl.lightness - 0.06).clamp(0.0, 1.0)).toColor());
 
